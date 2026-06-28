@@ -1,0 +1,22 @@
+version: '3.8'
+services:
+  main-backend:
+    build: .
+    ports:
+      - "5000:5000"
+    environment:
+      - PORT=5000
+      - MONGO_DB_URI=${MONGO_DB_URI}
+      - JWT_SECRET=${JWT_SECRET}
+      # THIS IS CRITICAL: It tells the backend to talk to the compiler container
+      - COMPILER_URL=http://compiler-api:8000
+    depends_on:
+      - compiler-api
+
+  compiler-api:
+    build: ./compiler
+    ports:
+      - "8000:8000"
+    environment:
+      - PORT=8000
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
